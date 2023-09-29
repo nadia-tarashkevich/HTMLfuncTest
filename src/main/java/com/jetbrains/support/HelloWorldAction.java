@@ -1,15 +1,23 @@
-package com.jetbrains.support.example.htmlfunctest;
+package com.jetbrains.support;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.codeEditor.printing.HTMLTextPainter;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.ui.popup.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+import com.intellij.ui.JBColor;
+import com.intellij.ui.awt.RelativePoint;
+
+import java.awt.*;
+
 
 public class HelloWorldAction extends AnAction {
+
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -24,15 +32,18 @@ public class HelloWorldAction extends AnAction {
 
         Project project = ProjectManager.getInstance().getDefaultProject();
 
-// Alternatively, you can get the project for a specific open project by name.
-// Replace "YourProjectName" with the name of the project you want to obtain.
-        Project specificProject = ProjectManager.getInstance().getOpenProjects()[0];//   .findProjectByName("YourProjectName");
-
         PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
         PsiFile psiFile = psiFileFactory.createFileFromText("MyDummyFile.java", myCode);
 
-        String htmlFragment = com.intellij.codeEditor.printing.HTMLTextPainter.convertCodeFragmentToHTMLFragmentWithInlineStyles(psiFile, myCode);
+        String htmlFragment = "<html><body>" +
+                com.intellij.codeEditor.printing.HTMLTextPainter.convertCodeFragmentToHTMLFragmentWithInlineStyles(psiFile, myCode) +
+                "</html></body>";
         // TODO: Display the HTML fragment in an IntelliJ window or dialog.
-        int i = 1;
+
+
+        PopupDialog popupDialog = new PopupDialog();
+        popupDialog.setPreferredSize(new Dimension(500, 500));
+        popupDialog.setTooltip(myCode);
+        popupDialog.setVisible(true);
     }
 }
